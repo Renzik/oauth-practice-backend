@@ -24,7 +24,12 @@ mongoose.connect(
 app.use(express.json());
 
 // cors middleware
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(
+  cors({
+    origin: 'https://60495bb991694000b08c6f9b--modest-einstein-76cd0d.netlify.app/',
+    credentials: true,
+  })
+);
 
 app.set('trust proxy', 1);
 

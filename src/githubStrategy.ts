@@ -46,6 +46,6 @@ router.get(
   '/auth/github/callback',
   passport.authenticate('github', {
     failureRedirect: '/login',
-    successRedirect: 'http://localhost:3000',
+    successRedirect: 'https://60495bb991694000b08c6f9b--modest-einstein-76cd0d.netlify.app/',
   })
 );
