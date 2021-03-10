@@ -24,7 +24,7 @@ mongoose.connect(
 app.use(express.json());
 
 // cors middleware
-app.use(cors({ origin: '/', credentials: true }));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.set('trust proxy', 1);
 
