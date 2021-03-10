@@ -26,12 +26,19 @@ app.use(express.json());
 // cors middleware
 app.use(cors({ origin: '/', credentials: true }));
 
+app.set('trust proxy', 1);
+
 // creates session
 app.use(
   session({
     secret: 'secretcode',
     resave: true,
     saveUninitialized: true,
+    cookie: {
+      sameSite: 'none',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
   })
 );
 
