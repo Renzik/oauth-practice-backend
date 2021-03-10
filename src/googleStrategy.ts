@@ -44,9 +44,8 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] 
 
 router.get(
   '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  }
+  passport.authenticate('google', {
+    failureRedirect: '/login',
+    successRedirect: 'http://localhost:3000',
+  })
 );
