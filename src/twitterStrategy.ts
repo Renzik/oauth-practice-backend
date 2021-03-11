@@ -44,6 +44,6 @@ router.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
     failureRedirect: '/login',
-    successRedirect: 'https://60495bb991694000b08c6f9b--modest-einstein-76cd0d.netlify.app/',
+    successRedirect: 'https://modest-einstein-76cd0d.netlify.app/',
   })
 );
