@@ -26,10 +26,15 @@ app.use(express.json());
 // cors middleware
 app.use(
   cors({
-    origin: 'https://modest-einstein-76cd0d.netlify.app',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://modest-einstein-76cd0d.netlify.app'
+        : 'http://localhost:3000',
     credentials: true,
   })
 );
+
+console.log(process.env.NODE_ENV);
 
 app.set('trust proxy', 1);
 
