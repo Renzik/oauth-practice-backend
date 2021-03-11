@@ -42,13 +42,17 @@ passport.use(
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
 
-let redirectUrl = 'https://modest-einstein-76cd0d.netlify.app/';
-if (process.env.NODE_ENV === 'development') redirectUrl = 'http://localhost:3000';
-
 router.get(
   '/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/login',
-    successRedirect: redirectUrl,
-  })
+  }),
+  (req, res) => {
+    const redirectURL =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://modest-einstein-76cd0d.netlify.app/';
+
+    res.redirect(redirectURL);
+  }
 );
