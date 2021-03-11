@@ -45,14 +45,7 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] 
 router.get(
   '/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/login',
-  }),
-  (req, res) => {
-    const redirectURL =
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : 'https://modest-einstein-76cd0d.netlify.app/';
-
-    res.redirect(redirectURL);
-  }
+    failureRedirect: 'https://modest-einstein-76cd0d.netlify.app/login',
+    successRedirect: 'https://modest-einstein-76cd0d.netlify.app/',
+  })
 );
