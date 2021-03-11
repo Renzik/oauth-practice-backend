@@ -23,21 +23,10 @@ mongoose.connect(
 // body parser
 app.use(express.json());
 
-// console.log(process.env.NODE_ENV);
-// console.log(app.settings.env);
-
 // cors middleware
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : 'https://modest-einstein-76cd0d.netlify.app',
-    credentials: true,
-  })
-);
+const corsHandler = require('./cors');
 
-console.log(process.env.NODE_ENV);
+app.use(cors(corsHandler));
 
 app.set('trust proxy', 1);
 
