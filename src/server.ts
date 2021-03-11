@@ -27,9 +27,9 @@ app.use(express.json());
 app.use(
   cors({
     origin:
-      process.env.NODE_ENV === 'production'
-        ? 'https://modest-einstein-76cd0d.netlify.app'
-        : 'http://localhost:3000',
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://modest-einstein-76cd0d.netlify.app',
     credentials: true,
   })
 );
