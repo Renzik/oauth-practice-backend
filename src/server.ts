@@ -26,7 +26,7 @@ app.use(express.json());
 // cors middleware
 app.use(
   cors({
-    origin: 'https://60495bb991694000b08c6f9b--modest-einstein-76cd0d.netlify.app',
+    origin: 'https://modest-einstein-76cd0d.netlify.app',
     credentials: true,
   })
 );
