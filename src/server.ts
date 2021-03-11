@@ -23,6 +23,9 @@ mongoose.connect(
 // body parser
 app.use(express.json());
 
+// console.log(process.env.NODE_ENV);
+// console.log(app.settings.env);
+
 // cors middleware
 app.use(
   cors({
