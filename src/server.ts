@@ -25,7 +25,6 @@ app.use(express.json());
 
 // cors middleware
 const corsHandler = require('./cors');
-
 app.use(cors(corsHandler));
 
 app.set('trust proxy', 1);
