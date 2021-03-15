@@ -17,6 +17,10 @@ const user = new mongoose.Schema({
     required: true,
     type: String,
   },
+  email: {
+    required: true,
+    type: String,
+  },
 });
 
 export default mongoose.model('User', user);

@@ -18,8 +18,10 @@ passport.use(
     // this function gets called on a succesful authentication!
     // the function below is called the verify cb.
     function (_: any, __: any, profile: any, cb: any) {
+      console.log('PROFILE:', profile);
+      const email = profile.emails[0].value;
       // insert into db.
-      User.findOne({ googleId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
+      User.findOne({ email: email }, async (err: Error, doc: IMongoDBUser) => {
         // return the error but no user is coming back
         if (err) return cb(err, null);
 
@@ -28,19 +30,20 @@ passport.use(
           const newUser = new User({
             googleId: profile.id,
             username: profile.name.givenName,
+            email: profile.emails[0].value,
           });
           await newUser.save();
           // if it doesn't exist send the new user
           cb(null, newUser);
         }
         // if it does exist send the found doc
-        cb(null, doc);
       });
+      cb(null, profile);
     }
   )
 );
 
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 router.get(
   '/auth/google/callback',
