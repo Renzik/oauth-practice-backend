@@ -19,9 +19,8 @@ passport.use(
     // the function below is called the verify cb.
     function (_: any, __: any, profile: any, cb: any) {
       console.log('PROFILE:', profile);
-      const email = profile.emails[0].value;
       // insert into db.
-      User.findOne({ email: email }, async (err: Error, doc: IMongoDBUser) => {
+      User.findOne({ googleId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
         // return the error but no user is coming back
         if (err) return cb(err, null);
 
@@ -37,8 +36,8 @@ passport.use(
           cb(null, newUser);
         }
         // if it does exist send the found doc
+        cb(null, doc);
       });
-      cb(null, profile);
     }
   )
 );
