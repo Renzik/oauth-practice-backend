@@ -5,5 +5,6 @@ export interface IMongoDBUser {
   githubId?: string;
   username: string;
   email: string;
+  password?: any;
   __v: number;
 }

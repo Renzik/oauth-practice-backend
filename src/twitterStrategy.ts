@@ -16,7 +16,6 @@ passport.use(
       callbackURL: '/auth/twitter/callback',
     },
     function (_: any, __: any, profile: any, cb: any) {
-      console.log('PROFILE:', profile);
       // insert into db.
       User.findOne({ twitterId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
         // return the error but no user is coming back
@@ -39,7 +38,7 @@ passport.use(
   )
 );
 
-router.get('/auth/twitter', passport.authenticate('twitter', { scope: ['email', 'profile'] }));
+router.get('/auth/twitter', passport.authenticate('twitter'));
 
 router.get(
   '/auth/twitter/callback',

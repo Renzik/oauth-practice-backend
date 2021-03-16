@@ -14,6 +14,7 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   },
   () => {
     console.log('Connected to db successfully');
@@ -49,6 +50,8 @@ app.use(passport.session());
 app.use(require('./googleStrategy'));
 app.use(require('./twitterStrategy'));
 app.use(require('./githubStrategy'));
+// app.use(require('./localStrategy'));
+require('./localStrategy')(passport);
 
 passport.serializeUser((user: IMongoDBUser, done: any) => {
   // the return value is added to the session

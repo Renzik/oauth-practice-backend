@@ -18,7 +18,6 @@ passport.use(
       callbackURL: '/auth/github/callback',
     },
     function (_: any, __: any, profile: any, cb: any) {
-      console.log('PROFILE:', profile);
       // insert into db.
       User.findOne({ githubId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
         // return the error but no user is coming back
@@ -41,7 +40,7 @@ passport.use(
   )
 );
 
-router.get('/auth/github', passport.authenticate('github', { scope: ['email', 'profile'] }));
+router.get('/auth/github', passport.authenticate('github'));
 
 router.get(
   '/auth/github/callback',

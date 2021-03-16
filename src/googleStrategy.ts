@@ -18,9 +18,9 @@ passport.use(
     // this function gets called on a succesful authentication!
     // the function below is called the verify cb.
     function (_: any, __: any, profile: any, cb: any) {
-      console.log('PROFILE:', profile);
       // insert into db.
-      User.findOne({ googleId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
+      const email = profile.emails[0].value;
+      User.findOne({ email: email }, async (err: Error, doc: IMongoDBUser) => {
         // return the error but no user is coming back
         if (err) return cb(err, null);
 
@@ -29,12 +29,24 @@ passport.use(
           const newUser = new User({
             googleId: profile.id,
             username: profile.name.givenName,
-            email: profile.emails[0].value,
+            email,
           });
           await newUser.save();
           // if it doesn't exist send the new user
           cb(null, newUser);
         }
+
+        if (doc && !doc.googleId) {
+          User.updateOne(
+            { email: email },
+            {
+              $set: {
+                googleId: profile.id,
+              },
+            }
+          );
+        }
+
         // if it does exist send the found doc
         cb(null, doc);
       });
