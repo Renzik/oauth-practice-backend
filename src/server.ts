@@ -41,7 +41,7 @@ app.use(
     resave: true,
     saveUninitialized: true,
     cookie: {
-      sameSite: 'none',
+      // sameSite: 'none',
       secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
@@ -54,26 +54,7 @@ app.use(passport.session());
 app.use(require('./googleStrategy'));
 app.use(require('./twitterStrategy'));
 app.use(require('./githubStrategy'));
-// app.use(require('./localStrategy'));
-
-passport.use(
-  new LocalStrategy({ usernameField: 'email' }, (email: any, password: any, done: any) => {
-    User.findOne({ email: email }, (err: any, user: any) => {
-      if (err) throw err;
-
-      if (!user) return done(null, false, { message: 'Incorrect username.' });
-
-      bcrypt.compare(password, user.password, (err, result) => {
-        if (err) throw err;
-        if (result) {
-          return done(null, user, { message: 'Logged in.' });
-        } else {
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-      });
-    });
-  })
-);
+require('./localStrategy')(passport);
 
 passport.serializeUser((user: IMongoDBUser, done: any) => {
   // the return value is added to the session
@@ -88,6 +69,11 @@ passport.deserializeUser((userId: string, done: any) => {
 });
 
 app.use('/api/users', require('./api/users'));
+app.use(
+  '/',
+  (req, res) => res.redirect('https://modest-einstein-76cd0d.netlify.app/')
+  // res.send('why are we hitting this backend route instead of front end??')
+);
 
 app.listen(process.env.PORT || PORT, () => {
   console.log(`Server started in port: ${PORT}`);
