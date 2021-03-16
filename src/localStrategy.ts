@@ -1,26 +1,27 @@
-import { IMongoDBUser } from './types';
 import User from './Models/User';
 import bcrypt from 'bcryptjs';
+import passport from 'passport';
+import passportLocal from 'passport-local';
 
-const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = passportLocal.Strategy;
 
-module.exports = function (passport: any) {
+module.exports = () =>
   passport.use(
     new LocalStrategy({ usernameField: 'email' }, (email: any, password: any, done: any) => {
       User.findOne({ email: email }, (err: any, user: any) => {
-        if (err) return done(err, false, 'error message');
+        if (err) throw err;
 
-        if (!user) return done(null, false, 'incorrect username');
+        if (!user) return done(null, false);
 
         bcrypt.compare(password, user.password, (err, result) => {
-          if (err) return done(err, false, 'error message');
+          if (err) throw err;
+
           if (result) {
-            return done(null, user, 'successful login');
+            return done(null, user);
           } else {
-            return done(null, false, 'incorrect password');
+            return done(null, false);
           }
         });
       });
     })
   );
-};

@@ -59,7 +59,7 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'p
 router.get(
   '/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: 'https://modest-einstein-76cd0d.netlify.app/login',
+    failureRedirect: 'https://modest-einstein-76cd0d.netlify.app/register',
     successRedirect: 'https://modest-einstein-76cd0d.netlify.app/',
   })
 );

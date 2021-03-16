@@ -8,40 +8,41 @@ import { IMongoDBUser } from 'src/types';
 const router = Router();
 
 router.get('/me', (req: Request, res: Response) => {
-  try {
-    // user gets attached to the req.user in the deserialize user function.
-    res.status(200).json(req.user);
-  } catch (err) {
-    console.error(err);
-  }
+  // user gets attached to the req.user in the deserialize user function.
+  console.log(req.user);
+  res.send(req.user);
 });
 
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: 'https://modest-einstein-76cd0d.netlify.app/',
-    failureRedirect: 'https://modest-einstein-76cd0d.netlify.app/login',
-  })(req, res, next);
+// router.post('/login', passport.authenticate('local'), (req: Request, res: Response, next: any) => {
+//   res.json('Successfully Authenticated');
+// });
+
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  res.send('success');
 });
 
 router.post('/register', (req: Request, res: Response) => {
-  const { username, email } = req.body;
-  User.findOne({ email: email }, async (err: Error, doc: IMongoDBUser) => {
+  const { username, password } = req?.body;
+
+  if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+    res.send('Improper values');
+    return;
+  }
+
+  User.findOne({ username: username }, async (err: Error, doc: IMongoDBUser) => {
     if (err) throw err;
 
     if (!doc) {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = new User({
-        username,
         password: hashedPassword,
-        email,
+        username,
       });
       await newUser.save();
       res.json({ status: 'success', user: newUser });
     }
 
-    if (doc) {
-      res.send('User already exists');
-    }
+    if (doc) res.send('User already exists');
   });
 });
 
