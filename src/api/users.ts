@@ -19,7 +19,7 @@ router.get('/me', (req: Request, res: Response) => {
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: 'https://modest-einstein-76cd0d.netlify.app/',
-    failureRedirect: 'https://modest-einstein-76cd0d.netlify.app/login',
+    failureRedirect: 'https://modest-einstein-76cd0d.netlify.app/api/users/login',
   })(req, res, next);
 });
 
