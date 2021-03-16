@@ -17,15 +17,18 @@ router.get('/me', (req: Request, res: Response) => {
 });
 
 router.post('/login', (req: Request, res: Response, next: any) => {
-  try {
-    passport.authenticate('local', {
-      successRedirect: 'https://modest-einstein-76cd0d.netlify.app',
-      failureRedirect: 'http://localhost:3000/login',
-      failureFlash: true,
-    })(req, res, next);
-  } catch (error) {
-    console.error(error);
-  }
+  passport.authenticate('local', (err, user, info) => {
+    console.log(`info`, info);
+    if (err) throw err;
+    if (!user) res.json('no user');
+    else {
+      req.logIn(user, err => {
+        if (err) throw err;
+        console.log(req.user);
+        return res.redirect('/');
+      });
+    }
+  })(req, res, next);
 });
 
 router.post('/register', (req: Request, res: Response) => {

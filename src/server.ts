@@ -26,6 +26,7 @@ mongoose.connect(
 
 // body parser
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // cors middleware
 const corsHandler = require('./cors');
@@ -59,11 +60,13 @@ passport.use(
   new LocalStrategy({ usernameField: 'email' }, (email: any, password: any, done: any) => {
     User.findOne({ email: email }, (err: any, user: any) => {
       if (err) throw err;
+
       if (!user) return done(null, false, { message: 'Incorrect username.' });
+
       bcrypt.compare(password, user.password, (err, result) => {
         if (err) throw err;
         if (result) {
-          return done(null, user);
+          return done(null, user, { message: 'Logged in.' });
         } else {
           return done(null, false, { message: 'Incorrect password.' });
         }
@@ -78,7 +81,6 @@ passport.serializeUser((user: IMongoDBUser, done: any) => {
 });
 
 passport.deserializeUser((userId: string, done: any) => {
-  console.log(`userId`, userId);
   // the return value is added to req.user
   User.findById(userId, (err: Error, doc: IMongoDBUser) => {
     return done(null, doc);
