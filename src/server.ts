@@ -5,6 +5,9 @@ import session from 'express-session';
 import passport from 'passport';
 import User from './Models/User';
 import { IMongoDBUser } from './types';
+import bcrypt from 'bcryptjs';
+
+const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
 const PORT = 4000;
@@ -51,7 +54,23 @@ app.use(require('./googleStrategy'));
 app.use(require('./twitterStrategy'));
 app.use(require('./githubStrategy'));
 // app.use(require('./localStrategy'));
-require('./localStrategy')(passport);
+
+passport.use(
+  new LocalStrategy({ usernameField: 'email' }, (email: any, password: any, done: any) => {
+    User.findOne({ email: email }, (err: any, user: any) => {
+      if (err) throw err;
+      if (!user) return done(null, false, { message: 'Incorrect username.' });
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err) throw err;
+        if (result) {
+          return done(null, user);
+        } else {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+      });
+    });
+  })
+);
 
 passport.serializeUser((user: IMongoDBUser, done: any) => {
   // the return value is added to the session
@@ -59,6 +78,7 @@ passport.serializeUser((user: IMongoDBUser, done: any) => {
 });
 
 passport.deserializeUser((userId: string, done: any) => {
+  console.log(`userId`, userId);
   // the return value is added to req.user
   User.findById(userId, (err: Error, doc: IMongoDBUser) => {
     return done(null, doc);

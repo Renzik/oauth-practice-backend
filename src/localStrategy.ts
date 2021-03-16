@@ -22,15 +22,15 @@ module.exports = function (passport: any) {
     })
   );
 
-  passport.serializeUser((user: any, cb: any) => {
-    cb(null, user.id);
-  });
-  passport.deserializeUser((id: any, cb: any) => {
-    User.findOne({ _id: id }, (err: any, user: any) => {
-      const userInformation = {
-        username: user.username,
-      };
-      cb(err, userInformation);
-    });
-  });
+  // passport.serializeUser((user: any, cb: any) => {
+  //   cb(null, user.id);
+  // });
+  // passport.deserializeUser((id: any, cb: any) => {
+  //   User.findOne({ _id: id }, (err: any, user: any) => {
+  //     const userInformation = {
+  //       username: user.username,
+  //     };
+  //     cb(err, userInformation);
+  //   });
+  // });
 };

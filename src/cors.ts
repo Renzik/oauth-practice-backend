@@ -11,6 +11,8 @@ const corsOptionsDelegate = (req: any, callback: any) => {
     ? (corsOptions = { origin: true, credentials: true })
     : { origin: false, credentials: true };
 
+  console.log(`corsOptions`, corsOptions);
+
   callback(null, corsOptions);
 };
 

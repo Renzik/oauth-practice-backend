@@ -18,16 +18,10 @@ router.get('/me', (req: Request, res: Response) => {
 
 router.post('/login', (req: Request, res: Response, next: any) => {
   try {
-    passport.authenticate('local', (err, user, info) => {
-      console.log('WE EVEN TRYING?');
-      if (err) throw err;
-      if (!user) res.json({ status: 'failed', user: user });
-      else {
-        req.logIn(user, err => {
-          if (err) throw err;
-          return res.send({ status: 'success', user: user });
-        });
-      }
+    passport.authenticate('local', {
+      successRedirect: 'https://modest-einstein-76cd0d.netlify.app',
+      failureRedirect: 'http://localhost:3000/login',
+      failureFlash: true,
     })(req, res, next);
   } catch (error) {
     console.error(error);
