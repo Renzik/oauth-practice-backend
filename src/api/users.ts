@@ -9,13 +9,11 @@ const router = Router();
 
 router.get('/me', (req: Request, res: Response) => {
   // user gets attached to the req.user in the deserialize user function.
-  console.log(req.user);
   res.send(req.user);
 });
 
 router.post('/login', passport.authenticate('local'), (req: Request, res: Response, next: any) => {
-  res.json('Successfully Authenticated');
-  console.log('In /login', req.user);
+  res.json(true);
 });
 
 router.post('/register', (req: Request, res: Response) => {
