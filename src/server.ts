@@ -30,7 +30,7 @@ app.use(express.json());
 const corsHandler = require('./cors');
 app.use(cors(corsHandler));
 
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 
 // creates session
 app.use(
@@ -40,7 +40,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       sameSite: 'none',
-      secure: true,
+      secure: 'auto',
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   })
