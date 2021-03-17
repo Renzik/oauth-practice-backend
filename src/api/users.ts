@@ -15,7 +15,6 @@ router.get('/me', (req: Request, res: Response) => {
 
 router.post('/login', passport.authenticate('local'), (req: Request, res: Response, next: any) => {
   res.json('Successfully Authenticated');
-  // req.session.save();
   console.log('In /login', req.user);
 });
 
