@@ -14,11 +14,11 @@ const user = new mongoose.Schema({
     type: String,
   },
   username: {
-    required: true,
+    required: false,
     type: String,
   },
   email: {
-    required: false,
+    required: true,
     type: String,
     unique: true,
   },
