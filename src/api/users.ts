@@ -13,30 +13,28 @@ router.get('/me', (req: Request, res: Response) => {
   res.send(req.user);
 });
 
-// router.post('/login', passport.authenticate('local'), (req: Request, res: Response, next: any) => {
-//   res.json('Successfully Authenticated');
-// });
-
-router.post('/login', passport.authenticate('local'), (req, res) => {
-  res.send('success');
+router.post('/login', passport.authenticate('local'), (req: Request, res: Response, next: any) => {
+  res.json('Successfully Authenticated');
+  // req.session.save();
+  console.log('In /login', req.user);
 });
 
 router.post('/register', (req: Request, res: Response) => {
-  const { username, password } = req?.body;
+  const { email, password } = req?.body;
 
-  if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
     res.send('Improper values');
     return;
   }
 
-  User.findOne({ username: username }, async (err: Error, doc: IMongoDBUser) => {
+  User.findOne({ email: email }, async (err: Error, doc: IMongoDBUser) => {
     if (err) throw err;
 
     if (!doc) {
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = new User({
         password: hashedPassword,
-        username,
+        email,
       });
       await newUser.save();
       res.json({ status: 'success', user: newUser });

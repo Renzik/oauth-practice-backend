@@ -5,7 +5,6 @@ import session from 'express-session';
 import passport from 'passport';
 import User from './Models/User';
 import { IMongoDBUser } from './types';
-import bcrypt from 'bcryptjs';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 
@@ -29,12 +28,7 @@ app.use(express.json());
 
 // cors middleware
 const corsHandler = require('./cors');
-app.use(
-  cors({
-    origin: ['http://localhost:3000', 'https://modest-einstein-76cd0d.netlify.app'],
-    credentials: true,
-  })
-);
+app.use(cors(corsHandler));
 
 // app.set('trust proxy', 1);
 
@@ -43,7 +37,7 @@ app.use(
   session({
     secret: 'secretcode',
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       sameSite: 'none',
       secure: true,
@@ -59,28 +53,7 @@ app.use(passport.session());
 app.use(require('./googleStrategy'));
 app.use(require('./twitterStrategy'));
 app.use(require('./githubStrategy'));
-// require('./localStrategy')();
-
-import passportLocal from 'passport-local';
-
-const LocalStrategy = passportLocal.Strategy;
-
-passport.use(
-  new LocalStrategy((username: string, password: string, done) => {
-    User.findOne({ username: username }, (err: Error, user: IMongoDBUser) => {
-      if (err) throw err;
-      if (!user) return done(null, false);
-      bcrypt.compare(password, user.password, (err, result: boolean) => {
-        if (err) throw err;
-        if (result === true) {
-          return done(null, user);
-        } else {
-          return done(null, false);
-        }
-      });
-    });
-  })
-);
+require('./localStrategy')();
 
 passport.serializeUser((user: IMongoDBUser, done: any) => {
   // the return value is added to the session
@@ -95,10 +68,6 @@ passport.deserializeUser((userId: string, done: any) => {
 });
 
 app.use('/api/users', require('./api/users'));
-app.use('/', (req, res) =>
-  // res.redirect('https://modest-einstein-76cd0d.netlify.app/')
-  res.send('why are we hitting this backend route instead of front end??')
-);
 
 // static file-serving middleware
 app.use(express.static(path.join(__dirname, '..', 'public')));
